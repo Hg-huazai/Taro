@@ -91,6 +91,9 @@ devServer:{port:8080,host:"localhost"},
 
 ![image-20200916155828014](C:\Users\Hg-huazai\AppData\Roaming\Typora\typora-user-images\image-20200916155828014.png)
 
+
+
+```
 1.项目目录
 
 ​	1.1dist(编辑结果的目录)
@@ -120,7 +123,11 @@ devServer:{port:8080,host:"localhost"},
 ​	1.4 package.json
 
 ​	1.5 project.config.json(小程序)
+```
+
+
 
 
 
 ## 二.生命周期与state
+
