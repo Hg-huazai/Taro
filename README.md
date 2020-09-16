@@ -10,27 +10,13 @@ taro是一款一次编码，多端运行的技术框架
 
 ​	支持TypeSctipt语言开发
 
-​	微信小程序
-
-​	百度小程序
-
-​	支付支付宝小程序
-
-​	web（h5）
-
-​	reactNative等
+​	微信小程序、百度小程序、支付支付宝小程序、web(h5)、reactNative等
 
 
 
 ​	准备技术：
 
-​		html/css/js
-
-​		MVVM模型
-
-​		es6语法特性   promise   异步   class ...
-
-​		jsx语法
+​		html/css/js、MVVM模型、es6语法特性(promise   异步   class ...)、jsx语法
 
 
 
@@ -131,3 +117,93 @@ devServer:{port:8080,host:"localhost"},
 
 ## 二.生命周期与state
 
+#### 1.生命周期
+
+```js
+  componentWillMount () { 
+  	console.log('组件渲染前，或者挂载前')
+  }
+
+  componentDidMount () { 
+  	console.log('可以访问到真是的dom结构了')
+  }
+
+  componentWillUnmount () { 
+  	console.log('组件被销毁')
+  }
+
+  componentDidShow () { 
+  	// react里面是不存在该钩子函数的
+    console.log('页面显示时触发')
+  }
+
+  componentDidHide () { 
+      // react里面是不存在该钩子函数的
+  	console.log('页面隐藏式触发')
+  }
+
+ componentWillUpdate(){
+    console.log('state数据将要更新时')
+  }
+
+  componentDidUpdate(){
+    console.log('state 数据更新过后')
+  }
+
+	//这个很重要
+ shouldComponentUpdate(nextProps,nextState){
+    //组件状态（state）被更改是进入  默认返回true， 如果返回true就会执行render()函数，
+    //即便状态 更改了，如果是返回flase的话，render()也不会重新渲染；
+    //shouldComponentUpdate  有两个参数(第二个参数是最新的状态)
+    //检查此次setState是否进行render调用
+    //一般用来多次的setState调用时，提升render的性能
+    //console.log("shouldComponentUpdate",nextState.name)
+    // return true;
+    if(nextState.name == '李四') return true;
+    else return false;
+  }
+
+  componentWillReceiveProps(){
+    console.log('父组件给子组件传递信息是才会调用')
+  }
+```
+
+#### 2.state
+
+```js
+state = {
+	name: '张三'
+}
+
+//修改状态
+//this.state.name = '李四' 此方法不行（vue）
+
+//this.setState ({
+//    name = '李四'
+//})
+
+//注意：this.setState 是异步的
+//如果想要获取最新的状态，需要在steState的第二个参数函数内部获取；
+    this.setState({
+      name:'李四',
+    },()=>{
+      console.log('更新后的状态：'+this.state.name);  //李四
+    })
+    console.log('还是更新前的状态： '+this.state.name);  //张三
+
+
+//页面获取
+{this.state.name}
+```
+
+#### 3.总结
+
+状态更新一定是异步的，
+
+同react一致，更新数据必须调用setState方法，若直接赋值是不会更新组件的
+
+这样this.state.name = '李四'    无效
+
+改为 this.setState.name ({name = '李四'}) 才可以
+
+想要拿最新的状态需要在setState的第二个参数的函数才可以拿到
