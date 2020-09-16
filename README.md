@@ -152,6 +152,7 @@ devServer:{port:8080,host:"localhost"},
 
 	//这个很重要
  shouldComponentUpdate(nextProps,nextState){
+    //第一个参数：最新的属性； 第二个参数：最新的状态
     //组件状态（state）被更改是进入  默认返回true， 如果返回true就会执行render()函数，
     //即便状态 更改了，如果是返回flase的话，render()也不会重新渲染；
     //shouldComponentUpdate  有两个参数(第二个参数是最新的状态)
@@ -207,3 +208,80 @@ state = {
 改为 this.setState.name ({name = '李四'}) 才可以
 
 想要拿最新的状态需要在setState的第二个参数的函数才可以拿到
+
+
+
+## 三.父组件给子组件传信息
+
+####  1.src的pages的index里面创建子组件(child.jsx)文件
+
+可以模仿index.jsx文件
+
+```jsx
+//Child.jsx
+import React, { Component } from 'react'
+import {View,Text} from "@tarojs/components"
+
+//定义组件
+class Child extends Component {
+  render(){
+    let {info} = this.props;   //es6的解构赋值(个人理解：info不能乱取名，一定是this.props的属性)    this.props可以拿到父组件给子组件绑定的所有属性
+    console.log(info)   //{sex:"man",age: 30}
+    console.log(this.props)  //{username:"李四",info:{sex:"man",age: 30}}
+    return (
+        //子组件获取父组件传递的username属性
+        <View>
+          <View>我是Child组件:{this.props.username}</View>
+          <View>我是Child组件:{info.sex}</View>
+          <View>我是Child组件:{this.props.name}</View>    //父组件是没有给子组件添加name这个属性的  所以这里会显示“默认”
+        </View>
+    )
+  }
+}
+//设置默认属性  如果父组件没有传递属性给子组件
+Child.defaultProps = {
+  name:'默认'
+}
+//暴露组件
+export default Child;
+```
+
+
+
+index.jsx文件使用组件Child.jsx
+
+```jsx
+//index.jsx
+import React, { Component } from 'react'
+import { View, Text } from '@tarojs/components'
+import './index.less'
+//引入组件Child
+import Child from './child.jsx'
+
+export default class Index extends Component {
+  state = {
+    name: '张三',
+    age: 20,
+    info: {
+      sex: 'man',
+      age: 30
+    },
+  }
+
+  componentWillReceiveProps(){
+    console.log('父组件给子组件传递信息是才会调用')
+  }
+
+  render () {
+    console.log('render')
+    return (
+      <View className='index'>
+        {/* 使用child组件 */}
+        <Child username={this.state.name} info={this.state.info}></Child>
+      </View>
+    )
+  }
+}
+
+```
+

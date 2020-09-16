@@ -1,12 +1,20 @@
 import React, { Component } from 'react'
 import { View, Text } from '@tarojs/components'
 import './index.less'
+//引入组件Child
+import Child from './child.jsx'
+import Child1 from './child1.jsx'
 
 export default class Index extends Component {
   
   state = {
     name: '张三',
-    age: 20
+    age: 20,
+    info: {
+      sex: 'man',
+      age: 30
+    },
+    info1: {sex: 'wan'},
   }
 
   componentWillMount () { 
@@ -72,8 +80,10 @@ export default class Index extends Component {
     console.log('render')
     return (
       <View className='index'>
-        <Text>{this.state.name}</Text>
-        <Text>{this.state.age}</Text>
+        {/* 使用child组件 */}
+        <Child username={this.state.name} info={this.state.info} info1={this.state.info1}></Child>
+        {/* 使用child1组件 */}
+        <Child1 info1={this.state.info1}></Child1>
       </View>
     )
   }
