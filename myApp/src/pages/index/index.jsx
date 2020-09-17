@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text } from '@tarojs/components'
+import { getCurrentInstance } from '@tarojs/taro'
 import './index.less'
 //引入组件Child
 import Child from './child.jsx'
@@ -18,7 +19,11 @@ export default class Index extends Component {
   }
 
   componentWillMount () { 
-    console.log('挂载前')
+    console.log('挂载前');
+    let {id} = getCurrentInstance().router.params  //获取路由跳转的参数
+    let {age} = getCurrentInstance().router.params  //获取路由跳转的参数    推荐使用结构赋值
+    console.log('id:'+id);  //3
+    console.log('age:'+age);  //25
   }
 
   componentDidMount () { 

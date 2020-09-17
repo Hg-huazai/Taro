@@ -20,6 +20,16 @@ taro是一款一次编码，多端运行的技术框架
 
 
 
+​	编译小程序要**微信小程序预览模式**的**注意**：(需要注意微信开发者工具的项目设置)
+
+​		需要设置关闭 ES6 转 ES5 功能，开启可能报错；
+
+​		需要设置关闭上传代码时样式自动补全，开启可能报错；
+
+​		需要设置关闭代码压缩上传，开启可能报错；
+
+
+
 ## 一.项目创建
 
 ​	核心转换图
@@ -290,4 +300,160 @@ export default class Index extends Component {
 }
 
 ```
+
+
+
+## 四.taro路由的配置
+
+#### 一.添加页面	
+
+1.添加页面时（例如添加/pages/ceshi/ceshi.jsx ）   
+
+```jsx
+pages/ceshi/ceshi.jsx
+
+import React, { Component } from 'react'
+import { View, Text ,Button} from '@tarojs/components'    //使用的标签
+
+export default class Ceshiyemian extends Component {
+  
+  state = {
+    name: '张三',
+    age: 20,
+  }
+
+  render () {
+    console.log('render')
+    return (
+      <View>
+        测试页面!!{this.state.name}
+      </View>
+    )
+  }
+}
+
+```
+
+注意：我这个项目还必须要添加/pages/ceshi/ceshi.conifg.js才不会报错
+
+```js
+pages/ceshi/ceshi.config.js
+
+export default {
+	navigationBarTitleText: '测试页面'
+}
+```
+
+如果你没有pages/ceshi/ceshi.conifg.js这个文件不会报错，那么你只需要在pages/ceshi/ceshi.jsx文件添加如下一样可以配置导航头
+
+```jsx
+pages/ceshi/ceshi.jsx
+
+config 是和 state同级的
+config = {
+	navigationBarTitleText: '测试页面'
+}
+```
+
+
+
+
+
+2.入口文件app.jsx      我的是app.config.js文件
+
+```js
+export default {
+  pages: [
+    'pages/ceshi/ceshi',
+    'pages/index/index'
+  ],
+  window: {
+    backgroundTextStyle: 'light',
+    navigationBarBackgroundColor: '#fff',
+    navigationBarTitleText: 'WeChat',
+    navigationBarTextStyle: 'black'
+  }
+}
+
+```
+
+3.浏览器进入即可显示测试页面内容（因为ceshi在index上面）
+
+
+
+#### 二.路由点击跳转
+
+```jsx
+pages/ceshi/ceshi.jsx
+
+import React, { Component } from 'react'
+import Taro from '@tarojs/taro'    //记得导入
+import { View, Text ,Button} from '@tarojs/components'    //使用的标签
+
+export default class Ceshiyemian extends Component {
+  
+  state = {
+    name: '张三',
+    age: 20,
+  }
+//跳转事件
+ navindex(){
+    Taro.navigateTo({
+      url: '../index/index?id=3&age=25'
+    })
+  }
+
+  render () {
+    console.log('render')
+    return (
+      <View>
+        <Button onClick={this.navindex}>跳转index页面</Button>  //添加点击事件
+      </View>
+    )
+  }
+}
+```
+
+获取路由跳转的参数
+
+```jsx
+//index.jsx
+import React, { Component } from 'react'
+import { View, Text } from '@tarojs/components'
+import { getCurrentInstance } from '@tarojs/taro'    //获取页面跳转过来的参数时需要用到
+import './index.less'
+//引入组件Child
+import Child from './child.jsx'
+
+export default class Index extends Component {
+  state = {
+    name: '张三',
+    age: 20,
+  }
+
+在挂载前钩子可以获取传过来的参数
+componentWillMount () { 
+    console.log('挂载前');
+    let {id} = getCurrentInstance().router.params  //获取路由跳转的参数
+    let {age} = getCurrentInstance().router.params  //获取路由跳转的参数    推荐使用结构赋值
+    console.log(id);  //3
+    console.log(age);  //25
+  }
+
+  render () {
+    console.log('render')
+    return (
+      <View className='index'>
+        {/* 使用child组件 */}
+        <Child username={this.state.name} info={this.state.info}></Child>
+      </View>
+    )
+  }
+}
+
+```
+
+
+
+
 

@@ -1,5 +1,6 @@
 export default {
   pages: [
+    'pages/ceshiyemian/ceshiyemian',
     'pages/index/index'
   ],
   window: {
