@@ -86,7 +86,10 @@ export default class Index extends Component {
     return (
       <View className='index'>
         {/* 使用child组件 */}
-        <Child username={this.state.name} info={this.state.info} info1={this.state.info1}></Child>
+        <Child username={this.state.name} info={this.state.info} info1={this.state.info1}>
+          <View>你好</View>
+          <View>你好后</View>
+        </Child>
         {/* 使用child1组件 */}
         <Child1 info1={this.state.info1}></Child1>
       </View>

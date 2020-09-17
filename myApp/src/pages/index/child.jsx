@@ -19,6 +19,7 @@ class Child extends Component {
       <View>我是Child组件:{this.props.username}</View>
       <View>我是Child组件:{info.sex}</View>
       <View>我是Child组件:{this.props.name}</View>
+      {this.props.children}
     </View>
     )
   }

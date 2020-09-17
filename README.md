@@ -455,5 +455,320 @@ componentWillMount () {
 
 
 
+## 五.资源的引用
 
+####  1.可以直接通过import语法引用样式文件
+
+####  2.图片引入必须要通过import方式进行引入
+
+####  3.引用js文件方式
+
+```js
+import {functionName} from 'path'
+import defaultExportName from 'path'
+```
+
+
+
+方式一：
+
+```js
+// util.js
+//暴露出来的两个方法
+export function setData(){
+  console.log('setData')
+}
+export function getData(){
+  console.log('getData')
+}
+
+
+```
+
+index.js 引入 并使用
+
+```js
+import {setData,getData} from '../../util.js'
+
+//使用 
+setData();  //setData
+getData();  //getData
+
+```
+
+
+
+方式二：
+
+```js
+// util.js
+//暴露出来的两个方法
+function setData(){
+  console.log('setData')
+}
+function getData(){
+  console.log('getData')
+}
+//导出的是对象
+export default ({
+    setData,     //setData: setData    es6  简写
+    getData
+}); 
+```
+
+使用
+
+```js
+import util from '../../util.js'    //不需要大括号了
+
+//使用 
+util.setData();  //setData
+util.getData();  //getData
+```
+
+  2.图片引入
+
+```jsx
+import { View, Text ,Button,Image} from '@tarojs/components'
+import img from '../../img/one.png'
+
+render () {
+    console.log('render')
+    return (
+      <View>
+        <Image src={img}></Image>
+      </View>
+    )
+  }
+
+
+```
+
+3.样式文件引入   (注意单位px一定要大写的PX)
+
+```
+import './index.less'    
+
+
+```
+
+## 六.条件渲染和列表和Children
+
+#### 1.条件渲染（三元运算符）方法一
+
+```jsx
+export default class Ceshiyemian extends Component {
+  
+  state = {
+    isshow:false
+  }
+
+  render () {
+    console.log('render')
+    let {isshow} = this.state  // 结构赋值
+    return (
+      <View>
+        {isshow ? <View>三元运算符</View> : null}
+      </View>
+    )
+  }
+}
+
+```
+
+方法二：
+
+```jsx
+export default class Ceshiyemian extends Component {
+  
+  state = {
+    isshow:false
+  }
+
+  render () {
+    console.log('render')
+    let {isshow} = this.state  // 结构赋值
+    let dom = isshow ? <View>三元运算符</View> : null;
+    return (
+      <View>{dom}</View>
+    )
+  }
+}
+```
+
+方法三：封装
+
+```jsx
+export default class Ceshiyemian extends Component {
+  
+  state = {
+    isshow:false
+  }
+
+ getdom(){
+     let {isshow} = this.state  // 结构赋值
+     return (isshow ? <View>三元运算符</View> : null);
+ }
+
+  render () {
+    console.log('render')
+    return (
+      <View>{this.getdom()}</View>
+    )
+  }
+}
+```
+
+
+
+#### 2.列表
+
+```jsx
+export default class Ceshiyemian extends Component {
+  
+  state = {
+    list: [
+      {id:1, name:'ZS'},
+      {id:2, name:'LX'},
+      {id:3, name:'WW'},
+      {id:4, name:'ZL'},
+    ]
+  }
+
+  render () {
+    console.log('render')
+    return (
+      <View>
+        {
+          list.map((item,index)=>{
+            return (<View key={item.id}>{item.name}</View>)
+          })
+        }
+      </View>
+    )
+  }
+}
+```
+
+#### 3.children  （类似于插槽）
+
+父组件
+
+```jsx
+import React, { Component } from 'react'
+import { View, Text } from '@tarojs/components'
+import { getCurrentInstance } from '@tarojs/taro'
+import './index.less'
+//引入组件Child
+import Child from './child.jsx'
+
+export default class Index extends Component {
+  
+  state = {
+    name: '张三',
+    age: 20,
+  }
+
+  render () {
+    console.log('render')
+    return (
+      <View className='index'>
+        {/* 使用child组件 */}
+        <Child username={this.state.name}>你好</Child>
+      </View>
+    )
+  }
+}
+
+```
+
+
+
+子组件（{this.props.children}    //如果没有这一条的话，上面的“你好”是不会显示出来的    类似于插槽）
+
+```jsx
+import React, { Component } from 'react'
+import {View,Text} from "@tarojs/components"
+
+//定义组件
+class Child extends Component {
+  
+  render(){
+    return (
+       //子组件通过props获取父组件传递的username属性
+    <View>
+      <View>我是Child组件</View>
+      {this.props.children}    //如果没有这一条的话，上面的“你好”是不会显示出来的    类似于插槽
+    </View>
+    )
+  }
+}
+//暴露组件
+export default Child;
+```
+
+
+
+## 七.事件处理
+
+#### 1.Taro事件采用驼峰命名
+
+#### 2.在Taro中阻止事件冒泡，采用e.stopPropagatio
+
+#### 3.事件参数传参的时候，最后面才是事件的对象
+
+```jsx
+import React , { Component } from 'react'
+import Taro from '@tarojs/taro'
+import { View, Text ,Button,Image} from '@tarojs/components'
+
+export default class Ceshiyemian extends Component {
+  
+  state = {
+    name: '张三',
+    age: 20,
+  }
+
+  navindex(e){
+    //console.log(e)
+    console.log(this)  //undefined
+  }
+	
+  handleClick(par, e){
+      第一个参数是传过来的参数，第二个是事件本身的
+    //console.log(e)
+    console.log(par, e)
+    console.log(this.state.name)  //'张三'
+     e.stopPropagatio()   //阻止事件的冒泡
+  }
+
+  render () {
+    console.log('render')
+    return (
+      <View>
+        <Button onClick={this.navindex}>跳转index页面</Button>
+        <Button onClick={this.handleClick.bind(this,this.state.name)}>跳转index页面</Button>    //bind()改变this的指向
+      </View>
+    )
+  }
+}
+
+```
+
+```jsx
+const h5 = process.env.TARO_ENV;
+当前的运行环境
+
+const isH5 = process.env.TARO_ENV === "h5"
+如果是h5的话，那个isH5为true
+
+运用
+if(isH5){
+    console.log("现在是h5环境")
+    require("./h5.less");
+}else {
+    console.log("现在是微信小程序环境")
+    require("./wx.less")
+}
+```
 
